@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roommate Split - Smart Expense Manager</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #47706c;
+    --dark: #27865c;
+    --background: #f4f7f5;
+    --text: #1c2b24;
+    --muted: #718078;
+    --border: #e3eae5;
+    --white: #fff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+#login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    background: #edf5ef;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 950px;
+    min-height: 530px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 15px 45px #173d2d18;
+}
+
+.login-left {
+    background: linear-gradient(145deg, #4babad, #4f9892);
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login-brand {
+    font-size: 31px;
+}
+
+.login-brand span,
+.brand h1 span {
+    color: #b6f3ce;
+}
+
+.login-left h2 {
+    font-size: 30px;
+    margin: 15px 0 10px;
+}
+
+.login-left p {
+    color: #e0f5e7;
+}
+
+.login-features {
+    margin-top: 25px;
+}
+
+.login-features p {
+    margin: 14px 0;
+}
+
+.login-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 350px;
+}
+
+.eyebrow {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.4px;
+    color: var(--primary);
+}
+
+.login-form h2 {
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+.subtitle {
+    color: var(--muted);
+    margin: 5px 0 25px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dce5de;
+    border-radius: 8px;
+    font: inherit;
+    outline: none;
+    background: white;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+}
+
+.form-field {
+    margin-bottom: 18px;
+}
+
+.primary-btn, .secondary-btn {
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.primary-btn {
+    background: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+}
+
+.primary-btn:hover {
+    background: var(--dark);
+}
+
+.secondary-btn {
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.full-btn, .login-submit {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.login-message {
+    color: #c0392b;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.login-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 18px;
+}
+
+#app {
+    display: none;
+}
+
+.header {
+    background: linear-gradient(120deg, #154e37, #27865c);
+    color: white;
+    padding: 24px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand h1 {
+    font-size: 30px;
+}
+
+.brand p {
+    font-size: 13px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-tag {
+    border: 1px solid #ffffff66;
+    border-radius: 25px;
+    padding: 7px 12px;
+    font-size: 11px;
+}
+
+.logout-btn {
+    background: white;
+    color: var(--dark);
+    border: none;
+    padding: 9px 13px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.navbar {
+    background: white;
+    padding: 12px 7%;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #536258;
+    font-size: 14px;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: #e4f5eb;
+    color: var(--dark);
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 32px auto;
+    min-height: 400px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.welcome {
+    background: linear-gradient(120deg, #e2f7ea, #f5fff8);
+    border: 1px solid #d5eddd;
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.welcome h2, .page-heading h2 {
+    font-size: 27px;
+    margin: 4px 0;
+}
+
+.welcome-icon {
+    font-size: 54px;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.small {
+    font-size: 12px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.summary-card, .panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 15px #203d2b08;
+}
+
+.summary-card {
+    border-top: 4px solid #91c8aa;
+}
+
+.summary-card p {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 10px 0 2px;
+}
+
+.summary-card h2 {
+    font-size: 24px;
+    overflow-wrap: anywhere;
+}
+
+.card-icon {
+    font-size: 23px;
+}
+
+.blue { border-top-color: #6ba9ef; }
+.purple { border-top-color: #a58ae7; }
+.green { border-top-color: #5cb88a; }
+.orange { border-top-color: #e9ad63; }
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    margin-bottom: 22px;
+}
+
+.panel h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.panel-heading, .page-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.page-heading {
+    margin-bottom: 24px;
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-panel {
+    padding: 28px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.field {
+    margin-bottom: 20px;
+}
+
+.input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.input-row input {
+    flex: 1;
+}
+
+.split-members {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+}
+
+.split-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f4f8f5;
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.split-option input {
+    width: auto;
+}
+
+.message {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.success { color: var(--primary); }
+.error { color: #c0392b; }
+
+.empty-state {
+    padding: 28px 12px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.roommate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.roommate-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-wrap: anywhere;
+}
+
+.avatar {
+    background: #e2f5e9;
+    color: var(--dark);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.roommate-card p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th, td {
+    text-align: left;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+th {
+    background: #f5f8f6;
+    color: #52645a;
+}
+
+.delete-btn {
+    border: 1px solid #f0caca;
+    background: #fff4f4;
+    color: #b83232;
+    border-radius: 6px;
+    padding: 6px 9px;
+    cursor: pointer;
+}
+
+.balance-row, .settlement-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.balance-row p, .settlement-row p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.positive {
+    color: #17824f;
+    font-weight: bold;
+}
+
+.negative {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+footer {
+    background: #173d2d;
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+    margin-top: 60px;
+}
+
+footer p {
+    color: #d0e7d9;
+}
+
+@media (max-width: 800px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .roommate-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .header {
+        padding: 22px 5%;
+    }
+
+    .navbar {
+        padding: 10px 5%;
+    }
+
+    .container {
+        width: 92%;
+    }
+}
+
+@media (max-width: 650px) {
+    .login-box {
+        grid-template-columns: 1fr;
+    }
+
+    .login-left {
+        padding: 25px;
+        gap: 25px;
+    }
+
+    .login-right {
+        padding: 30px 25px;
+    }
+
+    .form-grid, .roommate-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .input-row {
+        flex-direction: column;
+    }
+
+    .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .header-tag {
+        display: none;
+    }
+
+    .header-right {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .nav-btn {
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 420px) {
+    .summary-card {
+        padding: 13px;
+    }
+
+    .summary-card h2 {
+        font-size: 19px;
+    }
+
+    .welcome {
+        padding: 20px;
+    }
+
+    .welcome h2 {
+        font-size: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<section id="login-page">
+    <div class="login-box">
+        <div class="login-left">
+            <div>
+                <h1 class="login-brand">Roommate<span>Split</span></h1>
+                <p>Share expenses, Keep friendships strong!</p>
+            </div>
+
+            <div>
+                <h2>Welcome Home! 🏠</h2>
+                <p>Manage your shared expenses without awkward money conversations.</p>
+
+                <div class="login-features">
+                    <p>✓ Easy expense management</p>
+                    <p>✓ Smart bill splitting</p>
+                    <p>✓ Clear roommate balances</p>
+                </div>
+            </div>
+
+            <p class="small">© 2026 RoomieSplit</p>
+        </div>
+
+        <div class="login-right">
+            <form class="login-form" id="login-form">
+                <p class="eyebrow">YOUR HOUSEHOLD DASHBOARD</p>
+                <h2>Sign In</h2>
+                <p class="subtitle">Login to manage your expenses.</p>
+
+                <div class="form-field">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email"
+                           placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password"
+                           placeholder="Enter your password" required>
+                </div>
+
+                <p id="login-message" class="login-message"></p>
+
+                <button type="submit" class="primary-btn login-submit">
+                    Sign In →
+                </button>
+
+                <p class="login-note">
+                    Demo login: use the email and password you register below.
+                </p>
+
+                <p class="login-note">
+                    Demo account details are stored in this browser.
+                    This is not secure authentication.
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div id="app">
+
+<header class="header">
+    <div class="brand">
+        <h1>Roomie<span>Split</span></h1>
+        <p>Share expenses. Keep friendships strong.</p>
+    </div>
+
+    <div class="header-right">
+        <span class="header-tag">SMART EXPENSE MANAGER</span>
+        <button class="logout-btn" id="logout-btn">Logout ↗</button>
+    </div>
+</header>
+
+<nav class="navbar">
+    <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+    <button class="nav-btn" data-page="roommates">Roommates</button>
+    <button class="nav-btn" data-page="add-expense">Add Expense</button>
+    <button class="nav-btn" data-page="expenses">Expenses</button>
+    <button class="nav-btn" data-page="balances">Balances</button>
+</nav>
+
+<main class="container">
+
+<section id="dashboard" class="page active">
+    <div class="welcome">
+        <div>
+            <p class="eyebrow">YOUR SHARED HOME</p>
+            <h2>Welcome to RoomieSplit!</h2>
+            <p>Manage shared bills without the awkward money talks.</p>
+            <p id="welcome-user" class="muted"></p>
+        </div>
+        <span class="welcome-icon">🏠</span>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card blue">
+            <span class="card-icon">💰</span>
+            <p>Total Expenses</p>
+            <h2 id="total-expenses">₹0.00</h2>
+        </div>
+
+        <div class="summary-card purple">
+            <span class="card-icon">👥</span>
+            <p>Roommates</p>
+            <h2 id="member-count">0</h2>
+        </div>
+
+        <div class="summary-card green">
+            <span class="card-icon">🧾</span>
+            <p>Expense Entries</p>
+            <h2 id="expense-count">0</h2>
+        </div>
+
+        <div class="summary-card orange">
+            <span class="card-icon">⚖️</span>
+            <p>Pending Payments</p>
+            <h2 id="pending-count">0</h2>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3>Recent Expenses</h3>
+                <button class="text-btn" data-go="expenses">View all →</button>
+            </div>
+            <div id="recent-expenses" class="empty-state">
+                No expenses yet. Add your first shared bill!
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>Quick Actions</h3>
+            <p class="muted">Manage your shared household expenses.</p>
+
+            <button class="primary-btn full-btn" data-go="add-expense">
+                + Add New Expense
+            </button>
+
+            <button class="secondary-btn full-btn" data-go="roommates">
+                + Add Roommate
+            </button>
+
+            <button class="secondary-btn full-btn" data-go="balances">
+                View Settlements
+            </button>
+        </div>
+    </div>
+</section>
+
+<section id="roommates" class="page">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">YOUR HOUSEHOLD</p>
+            <h2>Roommates</h2>
+            <p class="muted">Add people who share your expenses.</p>
+        </div>
+    </div>
+
+    <form id="roommate-form" class="panel form-panel">
+        <label for="roommate-name">Roommate name</label>
+
+        <div class="input-row">
+            <input id="roommate-name" type="text"
+                   placeholder="Enter roommate name"
+                   maxlength="40" required>
+
+            <button class="primary-btn" type="submit">Add Roommate</button>
+        </div>
+    </form>
+
+    <div id="roommate-list" class="roommate-grid"></div>
+</section>
+
+<section id="add-expense" class="page">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">TRACK EVERY RUPEE</p>
+            <h2>Add an Expense</h2>
+            <p class="muted">Record a bill and split it between roommates.</p>
+        </div>
+    </div>
+
+    <form id="expense-form" class="panel form-panel">
+        <div class="form-grid">
+            <div class="field">
+                <label for="expense-title">Expense name</label>
+                <input id="expense-title" type="text"
+                       placeholder="e.g. Electricity bill" required>
+            </div>
+
+            <div class="field">
+                <label for="expense-amount">Amount (₹)</label>
+                <input id="expense-amount" type="number"
+                       placeholder="e.g. 2000"
+                       min="0.01" max="10000000"
+                       step="0.01" required>
+            </div>
+
+            <div class="field">
+                <label for="expense-category">Category</label>
+                <select id="expense-category" required>
+                    <option value="Rent">Rent</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Electricity">Electricity</option>
+                    <option value="Wi-Fi">Wi-Fi</option>
+                    <option value="Food">Food</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="expense-payer">Paid by</label>
+                <select id="expense-payer" required>
+                    <option value="">Add a roommate first</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Split between</label>
+            <div id="split-members" class="split-members">
+                Add roommates before creating an expense.
+            </div>
+            <p class="muted small">
+                Select the roommates who should share this bill.
+                The amount will be split equally.
+            </p>
+        </div>
+
+        <button class="primary-btn" type="submit">Save Expense</button>
+        <p id="expense-message" class="message"></p>
+    </form>
+</section>
+
+<section id="expenses" class="page">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">YOUR SPENDING HISTORY</p>
+            <h2>All Expenses</h2>
+            <p class="muted">Review bills recorded by your household.</p>
+        </div>
+
+        <button class="primary-btn" data-go="add-expense">+ Add Expense</button>
+    </div>
+
+    <div class="panel table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Expense</th>
+                    <th>Category</th>
+                    <th>Paid by</th>
+                    <th>Amount</th>
+                    <th>Share</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="expense-table">
+                <tr>
+                    <td colspan="6" class="empty-state">No expenses recorded yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="balances" class="page">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">CLEAR AND FAIR</p>
+            <h2>Balances & Settlements</h2>
+            <p class="muted">See who should pay and who should receive money.</p>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>Individual Balances</h3>
+        <p class="muted small">
+            Positive means the roommate should receive money.
+            Negative means the roommate owes money.
+        </p>
+        <div id="balance-list">Add roommates and expenses to calculate balances.</div>
+    </div>
+
+    <div class="panel">
+        <h3>Suggested Settlements</h3>
+        <p class="muted small">Suggested payments help settle recorded expenses.</p>
+        <div id="settlement-list">No settlements to show yet.</div>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <h3>RoomieSplit</h3>
+    <p>Split fairly</p>
+    <p class="small">Hackathon Project</p>
+</footer>
+
+</div>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+
+let roommates = [];
+let expenses = [];
+
+function getUsers() {
+    try {
+        return JSON.parse(localStorage.getItem("rs_demo_users") || "[]");
+    } catch {
+        return [];
+    }
+}
+
+function getCurrentUser() {
+    try {
+        return JSON.parse(sessionStorage.getItem("rs_demo_session") || "null");
+    } catch {
+        return null;
+    }
+}
+
+function setMessage(text) {
+    $("login-message").textContent = text;
+}
+
+function showLogin() {
+    $("login-page").style.display = "flex";
+    $("app").style.display = "none";
+}
+
+function dataKey(type) {
+    const user = getCurrentUser();
+    return "rs_" + user.email + "_" + type;
+}
+
+/* LOAD ROOMMATES FROM JAVA AND EXPENSES FROM BROWSER */
+async function loadData() {
+    try {
+        const response = await fetch("/api/roommates");
+
+        if (!response.ok) {
+            throw new Error("Could not load roommates");
+        }
+
+        const data = await response.json();
+
+        roommates = data.map(person => ({
+            id: String(person.id),
+            name: person.name
+        }));
+
+        expenses = JSON.parse(
+            localStorage.getItem(dataKey("expenses")) || "[]"
+        );
+
+    } catch (error) {
+        alert("Java backend connect nahi ho raha. Backend run karo.");
+        roommates = [];
+        expenses = JSON.parse(
+            localStorage.getItem(dataKey("expenses")) || "[]"
+        );
+    }
+}
+
+function saveData() {
+    /* Roommates database mein hain; expenses abhi browser mein hain. */
+    localStorage.setItem(dataKey("expenses"), JSON.stringify(expenses));
+}
+
+async function showApp() {
+    const user = getCurrentUser();
+
+    if (!user) {
+        showLogin();
+        return;
+    }
+
+    $("login-page").style.display = "none";
+    $("app").style.display = "block";
+    $("welcome-user").textContent = "Signed in as " + user.name;
+
+    await loadData();
+    renderAll();
+}
+
+$("login-form").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const email = $("login-email").value.trim().toLowerCase();
+    const password = $("login-password").value;
+
+    const user = getUsers().find(
+        item => item.email === email && item.password === password
+    );
+
+    if (!user) {
+        setMessage("Invalid email or password. Please register first.");
+        return;
+    }
+
+    sessionStorage.setItem("rs_demo_session", JSON.stringify({
+        name: user.name,
+        email: user.email
+    }));
+
+    $("login-form").reset();
+    setMessage("");
+
+    await showApp();
+});
+
+/* DEMO REGISTRATION */
+const registerLink = document.createElement("button");
+registerLink.type = "button";
+registerLink.className = "secondary-btn full-btn";
+registerLink.textContent = "Create Demo Account";
+$("login-form").appendChild(registerLink);
+
+registerLink.addEventListener("click", () => {
+    const name = prompt("Enter your name:");
+    if (!name || !name.trim()) return;
+
+    const email = prompt("Enter your email address:");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        setMessage("Please enter a valid email address.");
+        return;
+    }
+
+    const password = prompt("Create a password (minimum 6 characters):");
+    if (!password || password.length < 6) {
+        setMessage("Password must contain at least 6 characters.");
+        return;
+    }
+
+    const users = getUsers();
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (users.some(user => user.email === cleanEmail)) {
+        setMessage("An account with this email already exists.");
+        return;
+    }
+
+    users.push({
+        name: name.trim(),
+        email: cleanEmail,
+        password: password
+    });
+
+    localStorage.setItem("rs_demo_users", JSON.stringify(users));
+    $("login-email").value = cleanEmail;
+    $("login-password").value = "";
+    setMessage("Account created. Please sign in.");
+});
+
+/* LOGOUT */
+$("logout-btn").addEventListener("click", () => {
+    sessionStorage.removeItem("rs_demo_session");
+    showLogin();
+});
+
+/* NAVIGATION */
+function showPage(pageId) {
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.toggle("active", page.id === pageId);
+    });
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+        button.classList.toggle("active", button.dataset.page === pageId);
+    });
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+document.querySelectorAll("[data-go]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.go));
+});
+
+/* ADD ROOMMATE TO DATABASE */
+$("roommate-form").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const name = $("roommate-name").value.trim();
+    if (!name) return;
+
+    if (roommates.some(person => person.name.toLowerCase() === name.toLowerCase())) {
+        alert("This roommate has already been added.");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/roommates", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: name })
+        });
+
+        if (!response.ok) {
+            throw new Error("Roommate save failed");
+        }
+
+        const savedRoommate = await response.json();
+
+        roommates.push({
+            id: String(savedRoommate.id),
+            name: savedRoommate.name
+        });
+
+        $("roommate-name").value = "";
+        renderAll();
+
+    } catch (error) {
+        alert("Roommate database mein save nahi hua. Backend check karo.");
+    }
+});
+
+/* DISPLAY ROOMMATES */
+function renderRoommates() {
+    const list = $("roommate-list");
+    const payer = $("expense-payer");
+    const splitMembers = $("split-members");
+
+    if (!roommates.length) {
+        list.innerHTML = '<p class="empty-state">No roommates added yet.</p>';
+        payer.innerHTML = '<option value="">Add a roommate first</option>';
+        splitMembers.textContent = "Add roommates before creating an expense.";
+        return;
+    }
+
+    list.innerHTML = roommates.map((person, index) => `
+        <div class="roommate-card">
+            <div class="avatar">${escapeHTML(person.name.charAt(0).toUpperCase())}</div>
+
+            <div style="flex: 1; min-width: 0;">
+                <strong>${escapeHTML(person.name)}</strong>
+                <p>Roommate ${index + 1}</p>
+            </div>
+
+            <button type="button" class="delete-btn"
+                    data-delete-roommate="${escapeHTML(person.id)}">
+                Delete
+            </button>
+        </div>
+    `).join("");
+
+    const previousPayer = payer.value;
+
+    payer.innerHTML = roommates.map(person => `
+        <option value="${escapeHTML(person.id)}">${escapeHTML(person.name)}</option>
+    `).join("");
+
+    if (roommates.some(person => person.id === previousPayer)) {
+        payer.value = previousPayer;
+    }
+
+    const previouslySelected = new Set(
+        [...splitMembers.querySelectorAll("input:checked")].map(input => input.value)
+    );
+
+    splitMembers.innerHTML = roommates.map(person => `
+        <label class="split-option">
+            <input type="checkbox" name="split-member"
+                   value="${escapeHTML(person.id)}"
+                   ${previouslySelected.size === 0 ||
+                     previouslySelected.has(person.id) ? "checked" : ""}>
+            ${escapeHTML(person.name)}
+        </label>
+    `).join("");
+}
+
+/* DELETE ROOMMATE FROM DATABASE */
+$("roommate-list").addEventListener("click", async event => {
+    const button = event.target.closest("[data-delete-roommate]");
+    if (!button) return;
+
+    const roommateId = button.dataset.deleteRoommate;
+
+    const roommate = roommates.find(
+        person => String(person.id) === String(roommateId)
+    );
+
+    if (!roommate) return;
+
+    if (!confirm("Delete " + roommate.name + "?")) return;
+
+    try {
+        const response = await fetch("/api/roommates/" + roommateId, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            alert("Delete nahi hua. Database mein related records ho sakte hain.");
+            return;
+        }
+
+        roommates = roommates.filter(
+            person => String(person.id) !== String(roommateId)
+        );
+
+        expenses = expenses
+            .filter(expense => String(expense.payerId) !== String(roommateId))
+            .map(expense => ({
+                ...expense,
+                splitIds: expense.splitIds.filter(
+                    id => String(id) !== String(roommateId)
+                )
+            }))
+            .filter(expense => expense.splitIds.length > 0);
+
+        saveData();
+        renderAll();
+
+        alert("Roommate deleted successfully!");
+
+    } catch (error) {
+        alert("Java backend se connection nahi ho raha. Backend run karo.");
+    }
+});
+
+/* ADD EXPENSE */
+$("expense-form").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const title = $("expense-title").value.trim();
+    const amount = Number($("expense-amount").value);
+    const category = $("expense-category").value;
+    const payerId = $("expense-payer").value;
+
+    const selectedIds = [
+        ...document.querySelectorAll('input[name="split-member"]:checked')
+    ].map(input => input.value);
+
+    const message = $("expense-message");
+    message.className = "message";
+
+    if (!title || !Number.isFinite(amount) || amount <= 0 || amount > 10000000) {
+        message.textContent = "Please enter a valid name and amount.";
+        message.classList.add("error");
+        return;
+    }
+
+    if (!roommates.some(person => person.id === payerId)) {
+        message.textContent = "Please add a roommate who paid the bill.";
+        message.classList.add("error");
+        return;
+    }
+
+    if (!selectedIds.length) {
+        message.textContent = "Select at least one roommate to split the bill.";
+        message.classList.add("error");
+        return;
+    }
+
+    expenses.push({
+        id: crypto.randomUUID(),
+        title: title,
+        amount: Math.round(amount * 100) / 100,
+        category: category,
+        payerId: payerId,
+        splitIds: selectedIds,
+        date: new Date().toLocaleDateString("en-IN")
+    });
+
+    $("expense-title").value = "";
+    $("expense-amount").value = "";
+    $("expense-category").value = "Rent";
+
+    message.textContent = "Expense added successfully!";
+    message.classList.add("success");
+
+    saveData();
+    renderAll();
+});
+
+/* HELPER FUNCTIONS */
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+function money(amount) {
+    return "₹" + Number(amount).toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function getRoommateName(id) {
+    const person = roommates.find(
+        roommate => String(roommate.id) === String(id)
+    );
+
+    return person ? person.name : "Unknown";
+}
+
+/* CALCULATE BALANCES */
+function calculateBalances() {
+    const balances = {};
+
+    roommates.forEach(person => {
+        balances[person.id] = 0;
+    });
+
+    expenses.forEach(expense => {
+        const payerId = String(expense.payerId);
+
+        if (!(payerId in balances) || !expense.splitIds.length) return;
+
+        const totalPaise = Math.round(expense.amount * 100);
+        const count = expense.splitIds.length;
+        const baseShare = Math.floor(totalPaise / count);
+        const remainder = totalPaise % count;
+
+        balances[payerId] += totalPaise;
+
+        expense.splitIds.forEach((id, index) => {
+            id = String(id);
+
+            if (id in balances) {
+                balances[id] -= baseShare + (index < remainder ? 1 : 0);
+            }
+        });
+    });
+
+    return balances;
+}
+
+function calculateSettlements() {
+    const balances = calculateBalances();
+    const creditors = [];
+    const debtors = [];
+
+    Object.entries(balances).forEach(([id, balance]) => {
+        if (balance > 0) creditors.push({ id, amount: balance });
+        if (balance < 0) debtors.push({ id, amount: -balance });
+    });
+
+    creditors.sort((a, b) => b.amount - a.amount);
+    debtors.sort((a, b) => b.amount - a.amount);
+
+    const settlements = [];
+    let i = 0;
+    let j = 0;
+
+    while (i < debtors.length && j < creditors.length) {
+        const amount = Math.min(debtors[i].amount, creditors[j].amount);
+
+        if (amount > 0) {
+            settlements.push({
+                from: debtors[i].id,
+                to: creditors[j].id,
+                amount: amount
+            });
+        }
+
+        debtors[i].amount -= amount;
+        creditors[j].amount -= amount;
+
+        if (debtors[i].amount === 0) i++;
+        if (creditors[j].amount === 0) j++;
+    }
+
+    return settlements;
+}
+
+/* DISPLAY EXPENSES */
+function renderExpenses() {
+    const table = $("expense-table");
+
+    if (!expenses.length) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-state">No expenses recorded yet.</td>
+            </tr>`;
+    } else {
+        table.innerHTML = [...expenses].reverse().map(expense => {
+            const share = expense.amount / expense.splitIds.length;
+
+            return `
+                <tr>
+                    <td>
+                        <strong>${escapeHTML(expense.title)}</strong>
+                        <br><span class="muted small">${escapeHTML(expense.date)}</span>
+                    </td>
+                    <td>${escapeHTML(expense.category)}</td>
+                    <td>${escapeHTML(getRoommateName(expense.payerId))}</td>
+                    <td>${money(expense.amount)}</td>
+                    <td>${money(share)} approx. each</td>
+                    <td>
+                        <button class="delete-btn" data-delete="${escapeHTML(expense.id)}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>`;
+        }).join("");
+    }
+
+    $("recent-expenses").innerHTML = expenses.length
+        ? [...expenses].reverse().slice(0, 4).map(expense => `
+            <div class="balance-row">
+                <div>
+                    <strong>${escapeHTML(expense.title)}</strong>
+                    <p>${escapeHTML(expense.category)} · Paid by
+                    ${escapeHTML(getRoommateName(expense.payerId))}</p>
+                </div>
+                <strong>${money(expense.amount)}</strong>
+            </div>
+        `).join("")
+        : '<p class="empty-state">No expenses yet. Add your first shared bill!</p>';
+}
+
+$("expense-table").addEventListener("click", event => {
+    const button = event.target.closest("[data-delete]");
+    if (!button) return;
+
+    expenses = expenses.filter(expense => expense.id !== button.dataset.delete);
+
+    saveData();
+    renderAll();
+});
+
+/* DISPLAY BALANCES AND SETTLEMENTS */
+function renderBalances() {
+    const balances = calculateBalances();
+    const balanceList = $("balance-list");
+    const settlementList = $("settlement-list");
+
+    if (!roommates.length) {
+        balanceList.textContent = "Add roommates to view balances.";
+        settlementList.textContent = "No settlements to show yet.";
+        return;
+    }
+
+    balanceList.innerHTML = roommates.map(person => {
+        const paise = balances[person.id] || 0;
+        const positive = paise > 0;
+        const negative = paise < 0;
+
+        const status = positive ? "Should receive"
+            : negative ? "Owes" : "Settled";
+
+        return `
+            <div class="balance-row">
+                <div>
+                    <strong>${escapeHTML(person.name)}</strong>
+                    <p>${status}</p>
+                </div>
+
+                <strong class="${positive ? "positive" : negative ? "negative" : ""}">
+                    ${positive ? "+" : negative ? "-" : ""}
+                    ${money(Math.abs(paise) / 100)}
+                </strong>
+            </div>`;
+    }).join("");
+
+    const settlements = calculateSettlements();
+
+    settlementList.innerHTML = settlements.length
+        ? settlements.map(item => `
+            <div class="settlement-row">
+                <div>
+                    <strong>${escapeHTML(getRoommateName(item.from))}</strong>
+                    <p>pays</p>
+                    <strong>${escapeHTML(getRoommateName(item.to))}</strong>
+                </div>
+
+                <strong class="positive">${money(item.amount / 100)}</strong>
+            </div>
+        `).join("")
+        : '<p class="empty-state">Everyone is settled up!</p>';
+}
+
+/* UPDATE DASHBOARD */
+function renderDashboard() {
+    const total = expenses.reduce(
+        (sum, expense) => sum + Math.round(expense.amount * 100), 0
+    );
+
+    $("total-expenses").textContent = money(total / 100);
+    $("member-count").textContent = roommates.length;
+    $("expense-count").textContent = expenses.length;
+    $("pending-count").textContent = calculateSettlements().length;
+}
+
+function renderAll() {
+    renderRoommates();
+    renderExpenses();
+    renderBalances();
+    renderDashboard();
+}
+
+/* RESTORE LOGIN SESSION */
+if (getCurrentUser()) {
+    showApp();
+} else {
+    showLogin();
+}
+</script>
+
+</body>
+</html>
